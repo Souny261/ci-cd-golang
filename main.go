@@ -23,7 +23,14 @@ func main() {
 			"msg":    "Hello World",
 		})
 	})
-	app.Post("/user/create", func(c *fiber.Ctx) error {
+	app.Post("/test", func(c *fiber.Ctx) error {
+		return c.JSON(fiber.Map{
+			"status": true,
+			"msg":    "Successfully",
+		})
+	})
+
+	app.Post("/create", func(c *fiber.Ctx) error {
 		createUserRequest := CreateUserRequest{}
 		err := c.BodyParser(&createUserRequest)
 		if err != nil {
