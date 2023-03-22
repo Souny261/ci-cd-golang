@@ -1,0 +1,9 @@
+app:
+  port: 3000
+# Portainer .env DATABASE_HOST: "localhost"
+postgres:
+  host: "env-2295026.la1.ltccloud.la"
+  port: "5432"
+  user: "super_admin"
+  password: "P@ssw0rd"
+  database: "Demo"
