@@ -32,39 +32,39 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/golangapi:lastest
 
-      # - name: Call Portainer Webhook to Update Service
-      #   id: callportainerwebhook
-      #   if: steps.build.outcome == 'success'
-      #   continue-on-error: true
-      #   run: |
+      - name: Call Portainer Webhook to Update Service
+        id: callportainerwebhook
+        if: steps.build.outcome == 'success'
+        continue-on-error: true
+        run: |
 
-      #     CODE=`curl --write-out '%{http_code}' \
-      #         --silent \
-      #         --output /dev/null \
-      #         --request POST \
-      #         --url 'https://portainer.kokkoksole.com/api/webhooks/f51099da-0414-4cf4-b616-666fe0f42dbe'`
+          CODE=`curl --write-out '%{http_code}' \
+              --silent \
+              --output /dev/null \
+              --request POST \
+              --url 'http://env-2295026.la1.ltccloud.la:9000/api/stacks/webhooks/d3074c25-1720-4f84-a82e-f14069512c28'`
 
-      #     if [ $CODE != "204" ]
-      #     then
-      #         echo $CODE
-      #         echo "FAILURE"
-      #         exit 1
-      #     else
-      #         echo $CODE
-      #         echo "SUCCESS"
-      #         exit 0
-      #     fi
+          if [ $CODE != "204" ]
+          then
+              echo $CODE
+              echo "FAILURE"
+              exit 1
+          else
+              echo $CODE
+              echo "SUCCESS"
+              exit 0
+          fi
 
-      # - name: Sent LINE Noti - Success
-      #   if: steps.build.outcome == 'success' && steps.callportainerwebhook.outcome == 'success'
-      #   uses: snow-actions/line-notify@v1.0.0
-      #   with:
-      #     access_token: ${{ secrets.LINE_ACCESS_TOKEN }}
-      #     message: "👏 Backend | build and deploy มีการอัปเดตเรื่อง ${{ github.event.commits[0].message }} ของ ${{ github.event.commits[0].author.name }} เสร็จแล้ว รอโปรแกรม Compile 1 นาที แล้วทดสอบได้เลย 😎"
+      - name: Sent LINE Noti - Success
+        if: steps.build.outcome == 'success' && steps.callportainerwebhook.outcome == 'success'
+        uses: snow-actions/line-notify@v1.0.0
+        with:
+          access_token: ${{ secrets.LINE_ACCESS_TOKEN }}
+          message: "👏 Backend | build and deploy มีการอัปเดตเรื่อง ${{ github.event.commits[0].message }} ของ ${{ github.event.commits[0].author.name }} เสร็จแล้ว รอโปรแกรม Compile 1 นาที แล้วทดสอบได้เลย 😎"
 
-      # - name: Sent LINE Noti - Failure
-      #   if: steps.build.outcome != 'success' || steps.callportainerwebhook.outcome != 'success'
-      #   uses: snow-actions/line-notify@v1.0.0
-      #   with:
-      #     access_token: ${{ secrets.LINE_ACCESS_TOKEN }}
-      #     message: "❌❌❌  Backend - Build Error เรื่อง ${{ github.event.commits[0].message }} ของ ${{ github.event.commits[0].author.name }} โปรดตรวจสอบ"
+      - name: Sent LINE Noti - Failure
+        if: steps.build.outcome != 'success' || steps.callportainerwebhook.outcome != 'success'
+        uses: snow-actions/line-notify@v1.0.0
+        with:
+          access_token: ${{ secrets.LINE_ACCESS_TOKEN }}
+          message: "❌❌❌  Backend - Build Error เรื่อง ${{ github.event.commits[0].message }} ของ ${{ github.event.commits[0].author.name }} โปรดตรวจสอบ"
