@@ -78,7 +78,7 @@ func main() {
 			Email:    createUserRequest.Email,
 			Password: password,
 		}
-		err = sostgresConnection.Create(&payload).Error
+		// err = sostgresConnection.Create(&payload).Error
 
 		if err != nil {
 			return c.JSON(fiber.Map{
