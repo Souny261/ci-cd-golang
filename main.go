@@ -2,10 +2,13 @@ package main
 
 import (
 	"ci-cd-golang/config"
+	"ci-cd-golang/controllers"
 	"ci-cd-golang/database"
 	"ci-cd-golang/models"
 	"encoding/json"
 	"fmt"
+
+	minioUpload "ci-cd-golang/platform/minio"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -14,6 +17,8 @@ import (
 )
 
 func main() {
+	minioClient, err := minioUpload.MinioConnection()
+	_ = minioClient
 	app := fiber.New(
 		fiber.Config{
 			JSONEncoder: json.Marshal,
@@ -26,6 +31,21 @@ func main() {
 		fmt.Printf("Connect database error %v ", err)
 		return
 	}
+
+	app.Get("/minio", func(c *fiber.Ctx) error {
+		minioClient, err := minioUpload.MinioConnection()
+		_ = minioClient
+		if err != nil {
+			return c.JSON(fiber.Map{
+				"status": false,
+				"msg":    err.Error(),
+			})
+		}
+		return c.JSON(fiber.Map{
+			"status": true,
+			"msg":    "Connect to Minio Successfully",
+		})
+	})
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		fmt.Println("GET: Hello World")
@@ -103,7 +123,8 @@ func main() {
 			"data":   users,
 		})
 	})
-
+	app.Post("/upload", controllers.UploadFile)
+	app.Get("/read/:name?", controllers.GetFile)
 	MYPORT := config.GetEnv("app.port", "3000")
 	SERVER_RUNNING := fmt.Sprintf(":%v", MYPORT)
 	app.Listen(SERVER_RUNNING)

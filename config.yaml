@@ -7,3 +7,9 @@ postgres:
   user: "super_admin"
   password: "P@ssw0rd"
   database: "Demo"
+
+minio:
+  endpoint: "env-2295026.la1.ltccloud.la:2087"
+  accessKeyID: "ZzTlrlqzPXgnymAt"
+  secretAccessKey: "K0BprpEjS621xthpGvoInaPoFYlTO9sj"
+  bucket: "demo"
