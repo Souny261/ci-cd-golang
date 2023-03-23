@@ -7,11 +7,13 @@ import (
 	"fmt"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"golang.org/x/crypto/bcrypt"
 )
 
 func main() {
 	app := fiber.New()
+	app.Use(cors.New())
 	sostgresConnection, err := database.PostgresConnection()
 	if err != nil {
 		fmt.Printf("Connect database error %v ", err)
