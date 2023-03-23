@@ -4,15 +4,22 @@ import (
 	"ci-cd-golang/config"
 	"ci-cd-golang/database"
 	"ci-cd-golang/models"
+	"encoding/json"
 	"fmt"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 	"golang.org/x/crypto/bcrypt"
 )
 
 func main() {
-	app := fiber.New()
+	app := fiber.New(
+		fiber.Config{
+			JSONEncoder: json.Marshal,
+			JSONDecoder: json.Unmarshal,
+		})
+	app.Use(logger.New())
 	app.Use(cors.New())
 	sostgresConnection, err := database.PostgresConnection()
 	if err != nil {
