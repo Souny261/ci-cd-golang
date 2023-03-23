@@ -30,29 +30,15 @@ func main() {
 		fmt.Println("GET: Hello World")
 		return c.JSON(fiber.Map{
 			"status": true,
-			"msg":    "Hello World",
+			"msg":    "GET: Hello World2023",
 		})
 	})
-	app.Get("/data/:id", func(c *fiber.Ctx) error {
-		id, err := c.ParamsInt("id")
-		fmt.Println("GET: ", id)
-		if err != nil {
-			return c.JSON(fiber.Map{
-				"status": false,
-				"msg":    "Hello ParamsInt",
-			})
-		}
-		return c.JSON(fiber.Map{
-			"status": true,
-			"msg":    "Hello World",
-			"data":   id,
-		})
-	})
+
 	app.Post("/", func(c *fiber.Ctx) error {
 		fmt.Println("POST: Hello World")
 		return c.JSON(fiber.Map{
 			"status": true,
-			"msg":    "Hello World",
+			"msg":    "POST: Hello World",
 		})
 	})
 	// app.Put("/put", func(c *fiber.Ctx) error {
