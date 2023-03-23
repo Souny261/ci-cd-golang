@@ -10,7 +10,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
-	"golang.org/x/crypto/bcrypt"
 )
 
 func main() {
@@ -28,61 +27,83 @@ func main() {
 	}
 
 	app.Get("/", func(c *fiber.Ctx) error {
+		fmt.Println("GET: Hello World")
 		return c.JSON(fiber.Map{
 			"status": true,
 			"msg":    "Hello World",
 		})
 	})
-
-	app.Put("/put", func(c *fiber.Ctx) error {
-		return c.JSON(fiber.Map{
-			"status": true,
-			"msg":    "PUT",
-		})
-	})
-
-	app.Delete("/delete", func(c *fiber.Ctx) error {
-		return c.JSON(fiber.Map{
-			"status": true,
-			"msg":    "Delete",
-		})
-	})
-	app.Post("/post", func(c *fiber.Ctx) error {
-		return c.JSON(fiber.Map{
-			"status": true,
-			"msg":    "Post",
-		})
-	})
-	app.Post("/create", func(c *fiber.Ctx) error {
-		createUserRequest := CreateUserRequest{}
-		err := c.BodyParser(&createUserRequest)
+	app.Get("/data/:id", func(c *fiber.Ctx) error {
+		id, err := c.ParamsInt("id")
+		fmt.Println("GET: ", id)
 		if err != nil {
 			return c.JSON(fiber.Map{
 				"status": false,
-				"msg":    err.Error(),
+				"msg":    "Hello ParamsInt",
 			})
 		}
-		password, _ := bcrypt.GenerateFromPassword([]byte(createUserRequest.Password), 14)
-		payload := models.User{
-			Name:     createUserRequest.Name,
-			Email:    createUserRequest.Email,
-			Password: password,
-		}
-		err = sostgresConnection.Create(&payload).Error
-
-		if err != nil {
-			return c.JSON(fiber.Map{
-				"status": false,
-				"msg":    err.Error(),
-			})
-		}
-
 		return c.JSON(fiber.Map{
 			"status": true,
-			"msg":    "Successfully",
-			"data":   payload,
+			"msg":    "Hello World",
+			"data":   id,
 		})
 	})
+	app.Post("/", func(c *fiber.Ctx) error {
+		fmt.Println("POST: Hello World")
+		return c.JSON(fiber.Map{
+			"status": true,
+			"msg":    "Hello World",
+		})
+	})
+	// app.Put("/put", func(c *fiber.Ctx) error {
+	// 	return c.JSON(fiber.Map{
+	// 		"status": true,
+	// 		"msg":    "PUT",
+	// 	})
+	// })
+
+	// app.Delete("/delete", func(c *fiber.Ctx) error {
+	// 	return c.JSON(fiber.Map{
+	// 		"status": true,
+	// 		"msg":    "Delete",
+	// 	})
+	// })
+	// app.Post("/post", func(c *fiber.Ctx) error {
+	// 	return c.JSON(fiber.Map{
+	// 		"status": true,
+	// 		"msg":    "Post",
+	// 	})
+	// })
+	// app.Post("/create", func(c *fiber.Ctx) error {
+	// 	createUserRequest := CreateUserRequest{}
+	// 	err := c.BodyParser(&createUserRequest)
+	// 	if err != nil {
+	// 		return c.JSON(fiber.Map{
+	// 			"status": false,
+	// 			"msg":    err.Error(),
+	// 		})
+	// 	}
+	// 	password, _ := bcrypt.GenerateFromPassword([]byte(createUserRequest.Password), 14)
+	// 	payload := models.User{
+	// 		Name:     createUserRequest.Name,
+	// 		Email:    createUserRequest.Email,
+	// 		Password: password,
+	// 	}
+	// 	err = sostgresConnection.Create(&payload).Error
+
+	// 	if err != nil {
+	// 		return c.JSON(fiber.Map{
+	// 			"status": false,
+	// 			"msg":    err.Error(),
+	// 		})
+	// 	}
+
+	// 	return c.JSON(fiber.Map{
+	// 		"status": true,
+	// 		"msg":    "Successfully",
+	// 		"data":   payload,
+	// 	})
+	// })
 
 	app.Get("/user/:id", func(c *fiber.Ctx) error {
 		id, err := c.ParamsInt("id")
