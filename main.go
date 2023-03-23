@@ -7,6 +7,7 @@ import (
 	"fmt"
 
 	"github.com/gofiber/fiber/v2"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func main() {
@@ -23,13 +24,26 @@ func main() {
 			"msg":    "Hello World",
 		})
 	})
-	app.Post("/test", func(c *fiber.Ctx) error {
+
+	app.Put("/put", func(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{
 			"status": true,
-			"msg":    "Successfully",
+			"msg":    "PUT",
 		})
 	})
 
+	app.Delete("/delete", func(c *fiber.Ctx) error {
+		return c.JSON(fiber.Map{
+			"status": true,
+			"msg":    "Delete",
+		})
+	})
+	app.Post("/post", func(c *fiber.Ctx) error {
+		return c.JSON(fiber.Map{
+			"status": true,
+			"msg":    "Post",
+		})
+	})
 	app.Post("/create", func(c *fiber.Ctx) error {
 		createUserRequest := CreateUserRequest{}
 		err := c.BodyParser(&createUserRequest)
@@ -39,25 +53,25 @@ func main() {
 				"msg":    err.Error(),
 			})
 		}
-		// password, _ := bcrypt.GenerateFromPassword([]byte(createUserRequest.Password), 14)
-		// payload := models.User{
-		// 	Name:     createUserRequest.Name,
-		// 	Email:    createUserRequest.Email,
-		// 	Password: password,
-		// }
-		// // err = sostgresConnection.Create(&payload).Error
+		password, _ := bcrypt.GenerateFromPassword([]byte(createUserRequest.Password), 14)
+		payload := models.User{
+			Name:     createUserRequest.Name,
+			Email:    createUserRequest.Email,
+			Password: password,
+		}
+		err = sostgresConnection.Create(&payload).Error
 
-		// if err != nil {
-		// 	return c.JSON(fiber.Map{
-		// 		"status": false,
-		// 		"msg":    err.Error(),
-		// 	})
-		// }
+		if err != nil {
+			return c.JSON(fiber.Map{
+				"status": false,
+				"msg":    err.Error(),
+			})
+		}
 
 		return c.JSON(fiber.Map{
 			"status": true,
 			"msg":    "Successfully",
-			"data":   createUserRequest,
+			"data":   payload,
 		})
 	})
 
