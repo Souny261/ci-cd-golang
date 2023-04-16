@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"ci-cd-golang/platform/gocron"
 	minioUpload "ci-cd-golang/platform/minio"
 
 	"github.com/gofiber/fiber/v2"
@@ -17,6 +18,7 @@ import (
 )
 
 func main() {
+	gocron.RunningService()
 	minioClient, err := minioUpload.MinioConnection()
 	_ = minioClient
 	app := fiber.New(
